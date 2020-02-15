@@ -41,13 +41,14 @@ AppAsset::register($this);
             ['label' => 'Home', 'url' => ['/site/index']],
             ['label' => 'About', 'url' => ['/site/about']],
             ['label' => 'Contact', 'url' => ['/site/contact']],
+            Yii::$app->user->isGuest ?(['label' => 'Зарегистрироваться', 'url' => ['/user/create']]):'',
             Yii::$app->user->isGuest ? (
-                ['label' => 'Login', 'url' => ['/site/login']]
+                ['label' => 'Вход', 'url' => ['/site/login']]
             ) : (
                 '<li>'
                 . Html::beginForm(['/site/logout'], 'post')
                 . Html::submitButton(
-                    'Logout (' . Yii::$app->user->identity->full_name . ')',
+                    'Выход (' . Yii::$app->user->identity->full_name . ')',
                     ['class' => 'btn btn-link logout']
                 )
                 . Html::endForm()
