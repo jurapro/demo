@@ -20,10 +20,10 @@ class SiteController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['logout', 'about','contact'],
+                'only' => ['logout', 'about', 'contact'],
                 'rules' => [
                     [
-                        'actions' => ['logout','about'],
+                        'actions' => ['logout', 'about'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -32,7 +32,7 @@ class SiteController extends Controller
                         'allow' => true,
                         'roles' => ['@'],
                         'matchCallback' => function ($rule, $action) {
-                            return Yii::$app->user->identity->role===1;
+                            return Yii::$app->user->identity->role === 1;
                         }
                     ],
 
@@ -86,6 +86,10 @@ class SiteController extends Controller
 
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
+            if (Yii::$app->user->identity->isAdmin()) {
+                return $this->redirect('/admin');
+            }
+
             return $this->goBack();
         }
 
