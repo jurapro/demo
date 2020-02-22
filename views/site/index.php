@@ -3,51 +3,47 @@
 /* @var $this yii\web\View */
 
 $this->title = 'My Yii Application';
+
+use yii\helpers\Html;
+use yii\web\View;
+use yii\widgets\ListView;
+use yii\widgets\Pjax;
+
 ?>
-<div class="site-index">
 
-    <div class="jumbotron">
-        <h1>Congratulations!</h1>
+<div class="request-index">
 
-        <p class="lead">You have successfully created your Yii-powered application.</p>
+    <h1><?= Html::encode($this->title) ?></h1>
 
-        <p><a class="btn btn-lg btn-success" href="http://www.yiiframework.com">Get started with Yii</a></p>
-    </div>
 
-    <div class="body-content">
+    <?php Pjax::begin(['id' => 'requests']); ?>
 
-        <div class="row">
-            <div class="col-lg-4">
-                <h2>Heading</h2>
+    <h2>Всего обработанно заявок: <span id="count"><?= Html::encode($count) ?></span></h2>
+    <h3>Последние обработанные заявки</h3>
+    <?php foreach ($requests as $request): ?>
+        <h4><?= Html::encode($request->name) ?></h4>
+    <?php endforeach; ?>
 
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-                    dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-                    ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-                    fugiat nulla pariatur.</p>
+    <?php Pjax::end(); ?>
 
-                <p><a class="btn btn-default" href="http://www.yiiframework.com/doc/">Yii Documentation &raquo;</a></p>
-            </div>
-            <div class="col-lg-4">
-                <h2>Heading</h2>
+    <?php
+    $this->registerJs(
+        '
+        let count=$("#count").text();
+        setInterval(()=>{
+        $.pjax.reload(\'#requests\');
+        
+        if (count !== $("#count").text()) {
+            count=$("#count").text();
+            let audio = new Audio(\'/sound/sound.mp3\');
+            audio.play();
+        }     
+        
+        },3000)
+        ',
+        View::POS_READY,
+        'pjax'
+    );
+    ?>
 
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-                    dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-                    ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-                    fugiat nulla pariatur.</p>
-
-                <p><a class="btn btn-default" href="http://www.yiiframework.com/forum/">Yii Forum &raquo;</a></p>
-            </div>
-            <div class="col-lg-4">
-                <h2>Heading</h2>
-
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-                    dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-                    ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-                    fugiat nulla pariatur.</p>
-
-                <p><a class="btn btn-default" href="http://www.yiiframework.com/extensions/">Yii Extensions &raquo;</a></p>
-            </div>
-        </div>
-
-    </div>
 </div>

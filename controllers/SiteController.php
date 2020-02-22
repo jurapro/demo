@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\models\Request;
 use Yii;
 use yii\filters\AccessControl;
 use yii\web\Controller;
@@ -70,7 +71,12 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        return $this->render('index');
+        $requests = Request::find()->where(['status'=>1])->addOrderBy('datetime')->limit(2,0)->all();
+
+        return $this->render('index', [
+            'requests' => $requests,
+            'count'=>Request::find()->where(['status'=>1])->count(),
+        ]);
     }
 
     /**
